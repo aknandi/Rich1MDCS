@@ -1,0 +1,12 @@
+x86_64-slc6-gcc49-opt/*
+*~
+.project
+.cproject
+python/xmlFiles/*
+python/batchjobs/*
+python/output/*
+scripts/output/*
+Make_Trends/output/*
+CreateDBLayer/*.db
+CreateDBLayer/MDMS_DB_RunNumber*/*
+python/.__*
