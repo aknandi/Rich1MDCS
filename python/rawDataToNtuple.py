@@ -47,24 +47,23 @@ def getData(runNumber,fstep,lstep,tsteps,islocal=False):
 	
 	preambles={}
 	now = datetime.datetime.now()
-	post_string="/RAW/FULL/RICH1/TEST"
-#	preamble_string="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/"
-	preamble_string="root://eoslhcb.cern.ch//eos/lhcb/user/a/anandi/RichMDCS"
-
-	machine_name=socket.gethostname()
-	print "Machine name is: "+machine_name
-	# castorfs is now obsolete
-#	if ((machine_name.find("lxplus"))<0 and (machine_name.find("lxb")<0)):
-#		preamble_string="file:/castorfs/cern.ch/grid/lhcb/data/"
 	
+	# First look in the users local eos area RichMDCS/{year}/
 	if islocal:
-		preamble_string="file:/daqarea/lhcb/data/"
-	for yr in range(2016,now.year+1):
-		preambles[str(yr)]=preamble_string#+str(yr)+post_string
-		
-	
+		preamble_string="root://eoslhcb.cern.ch//eos/lhcb/user/%s/%s/RichMDCS/"%(getpass.getuser()[0],getpass.getuser())
+		post_string = ""
+	# Look for the files on castor if the data cannot be found locally
+	else:
+		preamble_string="root://castorlhcb.cern.ch//castor/cern.ch/grid/lhcb/data/"
+		post_string="/RAW/FULL/RICH1/TEST"
+
+	# Construct full file path for a range of years
+	for yr in range(2015,now.year+1):
+		preambles[str(yr)]=preamble_string+str(yr)+post_string
+			
 	LIST=[]
 	the_year=2009
+	# Look for the raw files in each of the years
 	for yr,preamble in preambles.iteritems():
 		file1 = "%s/%d/%06d_%010d.raw"%(preamble,runNumber,runNumber,1)
                 print file1
@@ -72,7 +71,6 @@ def getData(runNumber,fstep,lstep,tsteps,islocal=False):
 			the_year=int(yr)
 			for nfl in range(1,20):
 				file = "%s/%d/%06d_%010d.raw"%(preamble,runNumber,runNumber,nfl)
-				# Need to have mdf: at the beginning to access as file is MDF/RAW not a ROOT file
 				fileURL = "mdf:%s/%d/%06d_%010d.raw"%(preamble,runNumber,runNumber,nfl)
 				if exists(file):
 					LIST.append(fileURL)
@@ -181,7 +179,8 @@ def rawDataToNtuple(options):
 		histoname = "%s/%s"%(outputdir,histoname)
 	
 	tuplename = "RICHTUPLE1 DATAFILE=\'%s\' TYP=\'ROOT\' OPT=\'NEW\'"%(tuplestring)
-			
+
+	# Currently put in manually. Edit here to use correct db and conddb tags 			
 	LHCbApp().DDDBtag="dddb-20150724"	
 	LHCbApp().CondDBtag="cond-20160123"
 	
@@ -230,7 +229,6 @@ def rawDataToNtuple(options):
 		print "DATA not found anywhere!"
 		sys.exit()
 	LHCbApp.DataType = str(DATA_and_Year["year"])
-	#LHCbApp.DataType = "2015"
 	
 	EventSelector().Input=DATA
 	EventClockSvc().EventTimeDecoder = "OdinTimeDecoder"

@@ -6,7 +6,7 @@ scripts/PatternCleaning.makesav
 .project
 .cproject
 python/xmlFiles/*
-python/batchjobs/*
+python/batchjobs/LSF*/*
 python/output/*
 scripts/output/*
 Make_Trends/output/*
