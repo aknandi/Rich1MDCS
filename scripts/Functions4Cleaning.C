@@ -82,6 +82,7 @@ void produceplot(TString title, TGraph* data, int thebox){
 			//                      arcs[i+k].SetFillStyle(300);
 			arcs[i+k].SetLineWidth(1);
 			arcs[i+k].SetLineColor(13);
+			// x centre, y centre, radius with default phimin=0 and phimax=360, i.e. a circle
 			if(thebox==0) arcs[i+k].DrawArc(16+32*(13-i)+HTilt*(k%2),16+VSpace*(6-k),15.7);
 			if(thebox==1) arcs[i+k].DrawArc(16+32*(i)+HTilt*((1+k)%2),16+VSpace*(k),15.7);
 		}

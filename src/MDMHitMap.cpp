@@ -242,9 +242,9 @@ void MDMHitMap::doClustering(bool fit)
         
         float maximum = func->GetParameter(0);
         float posX = func->GetParameter(1);
-        float posY = (func->GetParameter(3)+0.5)/8.-0.5;
+        float posY = (func->GetParameter(3)+0.5)/8.-0.5; // Back from ALICE mode
         float sigX = fabs(func->GetParameter(2));
-        float sigY = fabs(fabs(func->GetParameter(4))/8.);
+        float sigY = fabs(fabs(func->GetParameter(4))/8.); // Back from ALICE mode
         float aRot = func->GetParameter(5);
         float chi2 = func->GetChisquare();
         float nDF  = func->GetNDF();

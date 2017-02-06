@@ -13,3 +13,6 @@ Make_Trends/output/*
 CreateDBLayer/*.db
 CreateDBLayer/MDMS_DB_RunNumber*/*
 python/.__*
+python/*.root
+python/*.xml
+python/*.xml.previous
