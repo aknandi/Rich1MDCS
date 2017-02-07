@@ -54,6 +54,7 @@ Another script accepts almost the same options but submits the jobs to LSF (lxpl
 
 This option was old advice from Andrea, and I never used it.
 
+
 ---------------------------------------
 ---------------------------------------
 2. Pattern cleaning
@@ -72,20 +73,14 @@ NTuple_Run171282_afterProcess_U.root
 NTuple_Run171282_afterProcess_D.root
 
 These ntuples contain various control plots and an ntuple with the cleaned peak that will be further processed in 3.
-After a scan is taken, you will be asked to check whether it is good or not by the RICH guys. 
 In order to quickly check that everything is ok, check the canvas "can_All_Peaks" in the root file. All the peaks found on each HPD should appear here. There may be missing hpds.
 This may either be caused by wrong DB tags during step 1 or simply because the are disabled for whatever reason. 
 Nothing to worry about in the latter case, otherwise go back to step 1 logs and see if there is something wrong.
 
-You can also look at the pattern after the cleaning "can_Final"
-If everything looks normal proceed to step 3, otherwise you may want to check that the fits to the distributions make sense:
-"rooFit_xdiff"
-"rooFit_prop"
-"rooFit_npes"
-"rooFit_max"
-Also the likelihood distribution may be useful:
-"DLL_tot"
+You can also look at the pattern after the cleaning "can_Final".
+Other useful distributions to check: "rooFit_xdiff", "rooFit_prop", "rooFit_npes", "rooFit_max" and "DLL_tot"
 You may also change the DLL cut by changing the value of the global variable "double DLL_CUT=-2" at the beginning of scripts/Functions4Cleaning.C (and re-compile of course)
+
 
 ---------------------------------------
 ---------------------------------------
@@ -123,7 +118,7 @@ MDCSParameters_Run171986_MagnetUp_U_RadiusChange_1percent_0.xml
 where 171282 is the run number of the MagDown MDCS scan and 171986 is the run number of the MagUp MDCS scan 
 
 The content of these files can be copied and pasted into one xml file (HPD.xml) in distinct blocks (to make it human readable replace "><" with ">\n<").
-There's an example HPD.xml in doc/, where you will see for distinct blocks of parameters. Mag Up U box, Mag Up D box, Mag Down U box and Mag Down D box.
+There's an example HPD.xml in doc/, with distinct blocks of parameters. Mag Up U box, Mag Up D box, Mag Down U box and Mag Down D box.
 
 
 ---------------------------------------
@@ -146,7 +141,6 @@ datetime.datetime( ) - set this to the time the condition is valid from (see int
 
 This produces a DB slice e.g. MDCS-RICH1-07022017.db
 This can be given to Antonis or Chris to add to the LHCb CondDB
-
 
 
 Anita Nandi
