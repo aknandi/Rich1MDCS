@@ -30,9 +30,10 @@ In order to check if the file is staged
 
 After staging you can copy them to eos /eos/lhcb/user/{initial}/{username}/RichMDCS/{year}/{runNo}/ if you want. This will give you a local copy of all the scans to run over whenever is required
 
+>> rfcp /castor/cern.ch/grid/lhcb/data/2016/RAW/FULL/RICH1/TEST/171282/171282_0000000001.raw /eos/lhcb/user/{initial}/{username}/RichMDCS/{year}/{runNo}/
+
 
 >> SetupProject Brunel v49r2p1
-
 
 To see details of possible options:
 
@@ -117,15 +118,22 @@ MDCSParameters_Run171986_MagnetUp_U_RadiusChange_1percent_0.xml
 
 where 171282 is the run number of the MagDown MDCS scan and 171986 is the run number of the MagUp MDCS scan 
 
-The content of these files can be copied and pasted into one xml file (HPD.xml) in distinct blocks (to make it human readable replace "><" with ">\n<").
-There's an example HPD.xml in doc/, with distinct blocks of parameters. Mag Up U box, Mag Up D box, Mag Down U box and Mag Down D box.
-
 
 ---------------------------------------
 ---------------------------------------
 4. Create DB slice
 ---------------------------------------
 ---------------------------------------
+
+This needs to be done in CreateDBLayer directory
+
+The content of these output files can be copied and pasted into one xml file (HPD.xml) in distinct blocks (to make it human readable replace "><" with ">\n<").
+There's an example HPD.xml in doc/, with distinct blocks of parameters. Mag Up U box, Mag Up D box, Mag Down U box and Mag Down D box.
+
+It may be necessary to provide a -3% scaling to the radius parameters in the xml file. Donal showed that this improved the Cherekov angle resolution
+This can be achieved by running the CreateDBLayer/radiusScaling.py script, you need to modify the input and output xml file names. The scaling is given as an input
+
+>> python radiusScaling.py -3
 
 Move the HPD.xml file to SOMEPATH/Conditions/Rich1/Environment/
 The DBpath created is /Conditions/Rich1/Environment/ which has to match the path in the CondDBBrowser
