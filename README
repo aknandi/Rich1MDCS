@@ -1,20 +1,35 @@
-#Anita Nandi 6 Feb 2017
-Usage of the RICH1MDCS software
+---------------------------------------
+------- Anita Nandi 7 Feb 2017 --------
+--- Usage of the RICH1MDCS software ---
+---------------------------------------
 
-The MDCS analysis is divided into 3 steps:
+The MDCS analysis is divided into 4 steps:
 1) Peak finding
 2) Pattern cleaning
 3) Calibration parameters fitting
+4) Create DB slice
 
-
+---------------------------------------
+---------------------------------------
 1. Peak finding
-
-A Brunel algorithm (MDMRich1Algorithm) runs on raw data.
-Peaks candidates are formed from hits in the HPD.
+---------------------------------------
+---------------------------------------
 
 Using GaudiPython script under python/runMDCSPeakFinder.py
+A Brunel algorithm (MDMRich1Algorithm) runs on raw data. Run on lxplus
+It will search for the data in the local disk first (if you have downloaded the data locally), if the data is not found it will search on CASTOR
 
-It will search for data in the local disk first (if you have downloaded the data locally), if the data is not found it will search on CASTOR
+The files on castor must be staged before they can be accessed by the script (there will be 3 or 4 raw files for 1 scan)
+
+>> stager_get -M /castor/cern.ch/grid/lhcb/data/2016/RAW/FULL/RICH1/TEST/171282/171282_0000000001.raw
+
+The number 171282 is the run number of the MDCS scan, which can be found from the LHCb logbook. 
+In order to check if the file is staged
+
+>> stager_qry -M /castor/cern.ch/grid/lhcb/data/2016/RAW/FULL/RICH1/TEST/171282/171282_0000000001.raw
+
+After staging you can copy them to eos /eos/lhcb/user/{initial}/{username}/RichMDCS/{year}/{runNo}/ if you want. This will give you a local copy of all the scans to run over whenever is required
+
 
 >> SetupProject Brunel v49r2p1
 
@@ -26,15 +41,12 @@ To see details of possible options:
 
 To run normally (with no additional options):
 
->> python runMDCSPeakFinder.py -R 171282
+>> python runMDCSPeakFinder.py --RunNumber=171282
 
-This will run on all steps and give an ntuple to be processed in the cleaning. The run number here is the run number of the MDMS scan, which you can find from the LHCb logbook.
-
-
-This takes several hours to run. I usually ran this on the lxplus batch system with the batchjobs/RichMDCS.sh script
+This will run on all steps and give an ntuple to be processed in the cleaning called "NTuples_Run171282_AllSteps.root"
+This takes several hours to run (~3-4 hours). I usually ran this on the lxplus batch system with the batchjobs/RichMDCS.sh script
 
 >> bsub -q 1nd -J RichMDMS RichMDCS.sh
-
 
 Another script accepts almost the same options but submits the jobs to LSF (lxplus only) through ganga, run with
 
@@ -42,65 +54,100 @@ Another script accepts almost the same options but submits the jobs to LSF (lxpl
 
 This option was old advice from Andrea, and I never used it.
 
-
+---------------------------------------
+---------------------------------------
 2. Pattern cleaning
+---------------------------------------
+---------------------------------------
 
 This is a simple ROOT/rooFit C++ script. It is compiled automatically when you "make" the package.
-The executable is under scripts/PatternCleaning.exe
-The default output filename of the peak finder is something like "NTuples_Run92442_AllSteps.root"
-Then you can clean the pattern with
-"PatternCleaning.exe SOMEPATH/NTuples_Run92442_AllSteps.root"
-After ~3 minutes you will get 2 ntuples, 1 for each HPD box (U or D):
-NTuple_Run92442_afterProcess_U.root
-NTuple_Run92442_afterProcess_D.root
+The executable is under scripts/PatternCleaning.exe. This is run with:
 
-These ntuples contain various control plots and an ntuple with the cleaned peak that will
-be further processed in 3.
-After a scan is taken, you will be asked to check whether it is good or not by the RICH guys. In order to quickly check that
-everything is ok, check the canvas "can_All_Peaks" in the root file. All the peaks found on each HPD should appear here. There may be missing hpds.
-This may either be caused by wrong DB tags during step 1 or simply because the are disabled for
-whatever reason. Nothing to worry about in the latter case, otherwise go back to step 1 logs and see
-if there is something wrong.
+>> PatternCleaning.exe ../python/NTuples_Run171282_AllSteps.root
+
+where "NTuples_Run171282_AllSteps.root" is the output filename form the peak finding
+
+After ~3 minutes you will get 2 ntuples, 1 for each HPD box (U or D):
+NTuple_Run171282_afterProcess_U.root
+NTuple_Run171282_afterProcess_D.root
+
+These ntuples contain various control plots and an ntuple with the cleaned peak that will be further processed in 3.
+After a scan is taken, you will be asked to check whether it is good or not by the RICH guys. 
+In order to quickly check that everything is ok, check the canvas "can_All_Peaks" in the root file. All the peaks found on each HPD should appear here. There may be missing hpds.
+This may either be caused by wrong DB tags during step 1 or simply because the are disabled for whatever reason. 
+Nothing to worry about in the latter case, otherwise go back to step 1 logs and see if there is something wrong.
 
 You can also look at the pattern after the cleaning "can_Final"
-If everything looks normal proceed to step 3, otherwise you may want to check that the fits to the distributions
-make sense:
+If everything looks normal proceed to step 3, otherwise you may want to check that the fits to the distributions make sense:
 "rooFit_xdiff"
 "rooFit_prop"
 "rooFit_npes"
 "rooFit_max"
 Also the likelihood distribution may be useful:
 "DLL_tot"
-You may also change the DLL cut by changing the value of the global variable "double DLL_CUT=-2"
-at the beginning of scripts/Functions4Cleaning.C (and re-compile of course)
-I either use 0 or -2 depending on the scan.
+You may also change the DLL cut by changing the value of the global variable "double DLL_CUT=-2" at the beginning of scripts/Functions4Cleaning.C (and re-compile of course)
 
-
+---------------------------------------
+---------------------------------------
 3. Calibration parameters fitting
+---------------------------------------
+---------------------------------------
+
 Again you need to run a GaudiPython script: python/runMDCSParamFitter.py
 The algorithm called is "MDMFitParameters"
-Upper and lower box are processed separately (option --Rich1Panel):
-"python runMDCSParamFitter.py --RunNumber=92442 --MagPolarity=Down --Rich1Panel=D --InputFile=~/NTuple_Run92442_afterProcess_D.root"
-"python runMDCSParamFitter.py --RunNumber=92442 --MagPolarity=Down --Rich1Panel=U --InputFile=~/NTuple_Run92442_afterProcess_D.root"
-Just run "python runMDCSParamFitter.py --help" to list all options.
+Upper and lower box are processed separately (option --Rich1Panel) and you need to know the magnet polarity of the scan:
 
-For my work I added some more options to this, which you need to add to the command line for it to run properly. You can just use the values below here, and don't worry about what they are set to. I added them in to experiment with the code, but they don't do anything important to the output:
+>> python runMDCSParamFitter.py --RunNumber=171282 --MagPolarity=Down --Rich1Panel=D --InputFile=../scripts/NTuple_Run171282_afterProcess_D.root --RandomSeed=0 --RadiusFactor=1 --Systematics=0
+>> python runMDCSParamFitter.py --RunNumber=171282 --MagPolarity=Down --Rich1Panel=U --InputFile=../scripts/NTuple_Run171282_afterProcess_U.root --RandomSeed=0 --RadiusFactor=1 --Systematics=0
 
---RandomSeed=0 --RadiusFactor=1 --Systematics=0
+The last three options (RandomSeed, RadiusFactor and Systematics) are options added by Donal to experiment with the code, which are required for it to run properly. 
+Don't worry about what the numbers are, they don't do anything important to the output
+These will take ~2-3 minutes each to run
+
+To list all options:
+
+>> python runMDCSParamFitter.py -h
  
 
-You will get a root file with control plots (way more than what you need) and an 4 xml files, two with the new and two with the previus parameters (I would ignore the previous one, as I don't think it gets filled reliably!)
+You will get a root file with control plots (way more than what you need) and an 4 xml files, two with the new and two with the previus parameters 
+(I would ignore the previous one, as I don't think it gets filled reliably!)
 There is one xml file for each HPD box.
 
-In order to produce a full set of parameters for the CondDB you need to process two scans of opposite polarity (Up or Down) and
-copy and paste the content of the xml files to produce a "HPD.xml" file that you may then give to some rich guy (usually Chris Jones).
-You can also check them by yourself with a Brunel job in which you re-run the rich reconstruction with the newly calculated parameters.
+In order to produce a full set of parameters for the CondDB you need to process two scans of opposite polarity (Up or Down). Useful output files:
 
- I think there's an example HPD.xml in doc/, where you will see for distinct blocks of parameters. Mag Up U box, Mag Up D box, Mag Down U box and Mag Down D box.
+MDCSParameters_Run171282_MagnetDown_D_RadiusChange_1percent_0.xml
+MDCSParameters_Run171282_MagnetDown_U_RadiusChange_1percent_0.xml
+MDCSParameters_Run171986_MagnetUp_D_RadiusChange_1percent_0.xml
+MDCSParameters_Run171986_MagnetUp_U_RadiusChange_1percent_0.xml
 
-I have code that makes HPD.xml files into a DB slice under the "CreateDBLayer" folders, but I think it's maybe better if you ask Chris and Antonis for the latest code to do this. You can send them the HPD.xml perhaps and get them to make the DB slice. I think this is definitely safer in the beginning, as they can also assess the MDMS parameters within 
+where 171282 is the run number of the MagDown MDCS scan and 171986 is the run number of the MagUp MDCS scan 
 
-Sorry for the delay and I'll try my best to answer any issues via email if I can!
+The content of these files can be copied and pasted into one xml file (HPD.xml) in distinct blocks (to make it human readable replace "><" with ">\n<").
+There's an example HPD.xml in doc/, where you will see for distinct blocks of parameters. Mag Up U box, Mag Up D box, Mag Down U box and Mag Down D box.
 
-Donal (9/1/16)
 
+---------------------------------------
+---------------------------------------
+4. Create DB slice
+---------------------------------------
+---------------------------------------
+
+Move the HPD.xml file to SOMEPATH/Conditions/Rich1/Environment/
+The DBpath created is /Conditions/Rich1/Environment/ which has to match the path in the CondDBBrowser
+
+In CreateDBLayer.py:
+upAlign = SOMEPATH
+dnAlign = SOMEPATH
+datetime.datetime( ) - set this to the time the condition is valid from (see interval of validity, IOV). These are the start and end dates for the condition
+
+>> SetupProject LHCbDirac v8r2p55
+>> SetupProject LHCb v40r4
+>> python CreateDBLayer.py
+
+This produces a DB slice e.g. MDCS-RICH1-07022017.db
+This can be given to Antonis or Chris to add to the LHCb CondDB
+
+
+
+Anita Nandi
+07 Feb 2017

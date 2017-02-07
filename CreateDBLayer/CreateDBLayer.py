@@ -69,7 +69,37 @@ def fileMD5(file):
 # Mirror alignment
 #upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagUp"
 #dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors/MagDown"
-#dbFileName = "2012MirrorAlign"
+#dbFileName = "2013MirrorAlign"
+
+# Mirror alignment
+#upAlign    = "/usera/jonesc/NFS/DetDB/2012-MagTest/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2012-MagTest/MagDown"
+#dbFileName = "2012-MagTest"
+
+# Reset HPD alignments to 0
+#upAlign    = "/usera/jonesc/NFS/DetDB/ResetHPDAlign/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/ResetHPDAlign/MagDown"
+#dbFileName = "ResetHPDAlign"
+
+# 2015 Mirror alignment - V1
+#upAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-V2-It3/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-V2-It3/MagDown"
+#dbFileName = "2015-MirrorAlign-V2-It3"
+
+# 2015 Mirror alignment - V2
+#upAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-50ns/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2015-MirrorAlign-50ns/MagDown"
+#dbFileName = "2015-MirrorAlign-V2-It3"
+
+# MDMS - Run Number 171282 MagDOWN
+upAlign = "/afs/cern.ch/user/a/anandi/cmtuser/Brunel_v49r2p1/Rich/Rich1MDCS/CreateDBLayer/MDMS-RICH1-RunNumber171282and171986"#usera/anandi/DetDB/MDMS-RICH1-MagUP-RunNumber171986"
+dnAlign = "/afs/cern.ch/user/a/anandi/cmtuser/Brunel_v49r2p1/Rich/Rich1MDCS/CreateDBLayer/MDMS-RICH1-RunNumber171282and171986"
+dbFileName = "MDCS-RICH1"
+
+# Mirror alignment RICH1 only
+#upAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors-RICH1/MagUp"
+#dnAlign    = "/usera/jonesc/NFS/DetDB/2012Mirrors-RICH1/MagDown"
+#dbFileName = "2012RICH1MirrorAlign"
 
 # Move HPD Occupancies
 #upAlign = "/usera/jonesc/NFS/DetDB/MoveHPDOccs"
@@ -81,26 +111,10 @@ def fileMD5(file):
 #dnAlign = "/usera/jonesc/NFS/DetDB/L1Mapping"
 #dbFileName = "DetNumbers"
 
-# MDMS - Run Number 136273 MagUP
-#upAlign = "/home/dhill/cmtuser/Brunel_v44r5/Rich/Rich1MDCS/CreateDBLayer/usera/hilld/DetDB/MDMS-RICH1-MagUP-RunNumber136273"
-#dnAlign = "/home/dhill/cmtuser/Brunel_v44r5/Rich/Rich1MDCS/CreateDBLayer/usera/hilld/DetDB/MDMS-RICH1-MagUP-RunNumber136273"
+# MDMS
+#upAlign = "/usera/jonesc/NFS/DetDB/MDMS-RICH1"
+#dnAlign = "/usera/jonesc/NFS/DetDB/MDMS-RICH1"
 #dbFileName = "MDCS-RICH1"
-
-# MDMS - Run Number 136319 MagUP
-#upAlign = "/home/dhill/cmtuser/Brunel_v44r5/Rich/Rich1MDCS/CreateDBLayer/usera/hilld/DetDB/MDMS-RICH1-MagUP-RunNumber136319"
-#dnAlign = "/home/dhill/cmtuser/Brunel_v44r5/Rich/Rich1MDCS/CreateDBLayer/usera/hilld/DetDB/MDMS-RICH1-MagUP-RunNumber136319"
-#dbFileName = "MDCS-RICH1"
-
-#MDMS - RunNumber 136319 MagUP with HPD 11 parameters replaced with those in RunNumber 136273
-#Testing what is causing the large x-y difference in the magnified position
-#upAlign = "/home/dhill/cmtuser/Brunel_v44r5/Rich/Rich1MDCS/CreateDBLayer/usera/hilld/DetDB/MDMS-RICH1-MagUP-RunNumber136319-withHPD11-fromRunNumber136273"
-#dnAlign = "/home/dhill/cmtuser/Brunel_v44r5/Rich/Rich1MDCS/CreateDBLayer/usera/hilld/DetDB/MDMS-RICH1-MagUP-RunNumber136319-withHPD11-fromRunNumber136273"
-#dbFileName = "MDCS-RICH1"
-
-# MDMS - Run Number 171282 MagDOWN
-upAlign = "/afs/cern.ch/user/a/anandi/cmtuser/Brunel_v49r2p1/Rich/Rich1MDCS/CreateDBLayer/test"
-dnAlign = "/afs/cern.ch/user/a/anandi/cmtuser/Brunel_v49r2p1/Rich/Rich1MDCS/CreateDBLayer/test"
-dbFileName = "MDCS-RICH1"
 
 # Old HPD Occ values
 #upAlign = "/usera/jonesc/NFS/DetDB/OldHPDOcc"
@@ -110,7 +124,7 @@ dbFileName = "MDCS-RICH1"
 # Aerogel calibration
 #upAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
 #dnAlign = "/usera/jonesc/NFS/DetDB/Aerogel"
-#dbFileName = "2012AerogelCalib-V2"
+#dbFileName = "2012AerogelCalib-V5"
 
 # The following dates are extracted from spreadsheets here
 # http://marwww.in2p3.fr/~legac/LHCb/
@@ -159,15 +173,33 @@ field = { }
 #stop = datetime.datetime(  2011,  12,   31,   23,   59,  59  )
 
 # 2012                     Year  Month  Day   Hour  Min  Sec
-#field[ datetime.datetime(  2012,   4,    1,    1,    0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2012,   5,    1,   19,    0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2012,   5,    2,   22,   20,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2012,   5,   16,   20,    0,   0  ) ] = upAlign
-#field[ datetime.datetime(  2012,   6,    1,   13,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   4,    1,    1,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   5,    1,   19,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,   5,    2,   22,   20,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   5,   16,   20,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,   6,    1,   13,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   6,   11,   12,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,   7,   26,    2,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   8,   12,    1,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,   8,   30,   15,   30,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,   9,   14,   12,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,  10,   12,    1,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,  10,   25,    1,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,  11,    9,    0,    1,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2012,  12,    4,    1,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2012,  12,   14,   22,    0,   0  ) ] = dnAlign
+
+# 2013                     Year  Month  Day   Hour  Min  Sec
+## field[ datetime.datetime(  2013,   1,    1,    0,    0,   0  ) ] = dnAlign
+## field[ datetime.datetime(  2013,   1,   29,   18,    0,   0  ) ] = upAlign
+## field[ datetime.datetime(  2013,   2,    6,    0,    1,   0  ) ] = dnAlign
+
+# 2015
+#field[ datetime.datetime(  2015,   1,    1,    1,    0,   0  ) ] = upAlign
 
 #2016
-field[ datetime.datetime(  2016,   3,    16,    13,    0,   0  ) ] = dnAlign
-#field[ datetime.datetime(  2016,   5,    1,   19,    0,   0  ) ] = upAlign
+#field[ datetime.datetime(  2016,   1,    1,    0,    0,   0  ) ] = dnAlign
+field[ datetime.datetime(  2016,   1,    1,    0,    0,   0  ) ] = upAlign
 
 # Long way away ...
 stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
@@ -176,7 +208,7 @@ stop = datetime.datetime(  2100,  12,   31,   23,   59,  59  )
 fulDBname = dbFileName + "-" + dateString() + ".db"
 if os.path.exists(fulDBname) : os.remove(fulDBname)
 db = CondDBUI.CondDB( "sqlite_file:"+fulDBname+"/LHCBCOND",
-                      create_new_db=True, readOnly=False )
+                      create_new_db=True,readOnly=False )
 print "Opened DB file", fulDBname
 
 createdPaths = [ ]

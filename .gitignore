@@ -12,6 +12,7 @@ scripts/output/*
 Make_Trends/output/*
 CreateDBLayer/*.db
 CreateDBLayer/MDMS_DB_RunNumber*/*
+CreateDBLayer/usera/*
 python/.__*
 python/*.root
 python/*.xml
