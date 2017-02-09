@@ -1,5 +1,6 @@
 x86_64-slc6-gcc49-opt/*
 cmt/install.x86_64-slc6-gcc49-opt.history
+cmt/build.x86_64-slc6-gcc49-opt.log
 scripts/PatternCleaning.make
 scripts/PatternCleaning.makesav
 *~

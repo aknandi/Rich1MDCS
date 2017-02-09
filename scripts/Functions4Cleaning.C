@@ -44,7 +44,7 @@ void FillHPDMap(TList *HPDMap,TTree *tree, int box){
 void produceplot(TString title, TGraph* data, int thebox){
 	int NHPD=14;
 	int NCOL=7;
-	float VSpace=30;
+	float VSpace=28;
 	float HTilt=16;
 	float MagFactor=2;
 	TArc *arcs=new TArc[NHPD*NCOL];
