@@ -3,6 +3,17 @@
 --- Usage of the RICH1MDCS software ---
 ---------------------------------------
 
+To setup the environment for the first time:
+
+>> lb-dev Brunel/v52r0
+>> cd BrunelDev_v52r0
+>> mkdir Rich
+>> cd Rich
+>> git clone address_of_package
+>> cd ~/cmtuser/BrunelDev_v52r0
+>> make
+
+
 The MDCS analysis is divided into 4 steps:
 1) Peak finding
 2) Pattern cleaning
@@ -33,27 +44,20 @@ After staging you can copy them to eos /eos/lhcb/user/{initial}/{username}/RichM
 >> rfcp /castor/cern.ch/grid/lhcb/data/2016/RAW/FULL/RICH1/TEST/171282/171282_0000000001.raw /eos/lhcb/user/{initial}/{username}/RichMDCS/{year}/{runNo}/
 
 
->> SetupProject Brunel v49r2p1
-
 To see details of possible options:
 
->> python runMDCSPeakFinder.py -h 
-
+>> ./run python Rich/Rich1MDCS/python/runMDCSPeakFinder.py -h 
 
 To run normally (with no additional options):
 
->> python runMDCSPeakFinder.py --RunNumber=171282
+>> ./run python Rich/Rich1MDCS/python/runMDCSPeakFinder.py --RunNumber=171282
 
 This will run on all steps and give an ntuple to be processed in the cleaning called "NTuples_Run171282_AllSteps.root"
 This takes several hours to run (~3-4 hours). I usually ran this on the lxplus batch system with the batchjobs/RichMDCS.sh script
 
 >> bsub -q 1nd -J RichMDMS RichMDCS.sh
 
-Another script accepts almost the same options but submits the jobs to LSF (lxplus only) through ganga, run with
-
->> ganga runMDCSPeakFinder_ganga.py
-
-This option was old advice from Andrea, and I never used it.
+Another script accepts almost the same options but submits the jobs to LSF (lxplus only) through ganga: runMDCSPeakFinder_ganga.py. This option was old advice from Andrea, and I never used it.
 
 
 ---------------------------------------
@@ -62,10 +66,9 @@ This option was old advice from Andrea, and I never used it.
 ---------------------------------------
 ---------------------------------------
 
-This is a simple ROOT/rooFit C++ script. It is compiled automatically when you "make" the package.
-The executable is under scripts/PatternCleaning.exe. This is run with:
+This is a simple ROOT/rooFit C++ script. It is compiled automatically when you "make" the package. This is run with:
 
->> PatternCleaning.exe ../python/NTuples_Run171282_AllSteps.root
+>> ./run PatternCleaning.exe NTuples_Run171282_AllSteps.root
 
 where "NTuples_Run171282_AllSteps.root" is the output filename form the peak finding
 
@@ -74,11 +77,7 @@ NTuple_Run171282_afterProcess_U.root
 NTuple_Run171282_afterProcess_D.root
 
 These ntuples contain various control plots and an ntuple with the cleaned peak that will be further processed in 3.
-In order to quickly check that everything is ok, check the canvas "can_All_Peaks" in the root file. All the peaks found on each HPD should appear here. There may be missing hpds.
-This may either be caused by wrong DB tags during step 1 or simply because the are disabled for whatever reason. 
-Nothing to worry about in the latter case, otherwise go back to step 1 logs and see if there is something wrong.
-
-You can also look at the pattern after the cleaning "can_Final".
+In order to quickly check that everything is ok, check the canvas "can_All_Peaks" (before cleaning) and "can_Final" (after cleaning) in the root file
 Other useful distributions to check: "rooFit_xdiff", "rooFit_prop", "rooFit_npes", "rooFit_max" and "DLL_tot"
 You may also change the DLL cut by changing the value of the global variable "double DLL_CUT=-2" at the beginning of scripts/Functions4Cleaning.C (and re-compile of course)
 
@@ -93,8 +92,8 @@ Again you need to run a GaudiPython script: python/runMDCSParamFitter.py
 The algorithm called is "MDMFitParameters"
 Upper and lower box are processed separately (option --Rich1Panel) and you need to know the magnet polarity of the scan:
 
->> python runMDCSParamFitter.py --RunNumber=171282 --MagPolarity=Down --Rich1Panel=D --InputFile=../scripts/NTuple_Run171282_afterProcess_D.root --RandomSeed=0 --RadiusFactor=1 --Systematics=0
->> python runMDCSParamFitter.py --RunNumber=171282 --MagPolarity=Down --Rich1Panel=U --InputFile=../scripts/NTuple_Run171282_afterProcess_U.root --RandomSeed=0 --RadiusFactor=1 --Systematics=0
+>> ./run python Rich/Rich1MDCS/python/runMDCSParamFitter.py --RunNumber=171282 --MagPolarity=Down --Rich1Panel=D --InputFile=../scripts/NTuple_Run171282_afterProcess_D.root --RandomSeed=0 --RadiusFactor=1 --Systematics=0
+>> ./run python Rich/Rich1MDCS/python runMDCSParamFitter.py --RunNumber=171282 --MagPolarity=Down --Rich1Panel=U --InputFile=../scripts/NTuple_Run171282_afterProcess_U.root --RandomSeed=0 --RadiusFactor=1 --Systematics=0
 
 The last three options (RandomSeed, RadiusFactor and Systematics) are options added by Donal to experiment with the code, which are required for it to run properly. 
 Don't worry about what the numbers are, they don't do anything important to the output
@@ -102,10 +101,9 @@ These will take ~2-3 minutes each to run
 
 To list all options:
 
->> python runMDCSParamFitter.py -h
- 
+>> ./run python Rich/Rich1MDCS/python/runMDCSParamFitter.py -h 
 
-You will get a root file with control plots (way more than what you need) and an 4 xml files, two with the new and two with the previus parameters 
+You will get a root file with control plots (way more than what you need) and an 4 xml files, two with the new and two with the previous parameters 
 (I would ignore the previous one, as I don't think it gets filled reliably!)
 There is one xml file for each HPD box.
 
@@ -133,7 +131,7 @@ There's an example HPD.xml in doc/, with distinct blocks of parameters. Mag Up U
 It may be necessary to provide a -3% scaling to the radius parameters in the xml file. Donal showed that this improved the Cherekov angle resolution
 This can be achieved by running the CreateDBLayer/radiusScaling.py script, you need to modify the input and output xml file names. The scaling is given as an input
 
->> python radiusScaling.py -3
+>> ./run python Rich/Rich1MDCS/CreateDBLayer/radiusScaling.py -3
 
 Move the HPD.xml file to SOMEPATH/Conditions/Rich1/Environment/
 The DBpath created is /Conditions/Rich1/Environment/ which has to match the path in the CondDBBrowser
@@ -141,11 +139,9 @@ The DBpath created is /Conditions/Rich1/Environment/ which has to match the path
 In CreateDBLayer.py:
 upAlign = SOMEPATH
 dnAlign = SOMEPATH
-datetime.datetime( ) - set this to the time the condition is valid from (see interval of validity, IOV). These are the start and end dates for the condition
+datetime.datetime( ) - set the start and end dates for the condition (interval of validity, IOV). 
 
->> SetupProject LHCbDirac v8r2p55
->> SetupProject LHCb v40r4
->> python CreateDBLayer.py
+>> ./run python Rich/Rich1MDCS/CreateDBLayer/CreateDBLayer.py
 
 This produces a DB slice e.g. MDCS-RICH1-07022017.db
 This can be given to Antonis or Chris to add to the LHCb CondDB
