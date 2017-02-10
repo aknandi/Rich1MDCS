@@ -1,9 +1,11 @@
 #!/bin/bash
 
-cd /afs/cern.ch/user/a/anandi/cmtuser/Brunel_v49r2p1/Rich/Rich1MDCS/python/
+username=$USER
 
-. SetupProject.sh Brunel v49r2p1
+source /afs/cern.ch/lhcb/software/releases/LBSCRIPTS/dev/InstallArea/scripts/LbLogin.sh
 
-python runMDCSPeakFinder.py -R 171282 
+cd /afs/cern.ch/user/${username:0:1}/$username/cmtuser/BrunelDev_v52r0/
+ 
+./run python Rich/Rich1MDCS/python/runMDCSPeakFinder.py -R 171282 
 
 echo 'Done'

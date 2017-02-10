@@ -14,9 +14,9 @@
 #include "Event/ODIN.h"
 
 // Rich
-#include "RichKernel/RichDAQDefinitions.h"
+#include "RichUtils/RichDAQDefinitions.h"
 
-DECLARE_TOOL_FACTORY( MDMHitMapManager );
+DECLARE_TOOL_FACTORY( MDMHitMapManager )
 
 // Standard constructor
 MDMHitMapManager::MDMHitMapManager( const std::string& type,

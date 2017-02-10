@@ -7,7 +7,8 @@
 // #include "boost/multi_array.hpp"
 
 #include "RichKernel/RichAlgBase.h"
-#include "RichKernel/BoostArray.h"
+//#include "RichKernel/BoostArray.h"
+#include "RichUtils/BoostArray.h"
 
 #include "GaudiAlg/GaudiTupleAlg.h"
 

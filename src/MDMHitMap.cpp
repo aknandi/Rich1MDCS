@@ -6,7 +6,8 @@
 #include <boost/lexical_cast.hpp>
 #include "MDMHitMap.h"
 
-#include "RichKernel/RichDAQDefinitions.h"
+//#include "RichKernel/RichDAQDefinitions.h"
+#include "RichUtils/RichDAQDefinitions.h"
 
 #include "GaudiKernel/PhysicalConstants.h"
 

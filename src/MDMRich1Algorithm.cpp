@@ -7,8 +7,9 @@
 #include "GaudiUtils/Aida2ROOT.h"
 
 // Rich
-#include "RichKernel/RichSmartIDCnv.h"
-#include "RichKernel/RichDecodedData.h"
+//#include "RichKernel/RichSmartIDCnv.h"
+#include "RichUtils/RichSmartIDCnv.h"
+#include "RichUtils/RichDecodedData.h"
 
 // local
 #include "MDMRich1Algorithm.h"
@@ -22,12 +23,13 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MDMRich1Algorithm );
 
+typedef Rich::PoolMap< Rich::DAQ::Level1Input, Rich::DAQ::PDInfo > HPDMap;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 MDMRich1Algorithm::MDMRich1Algorithm( const std::string& name, ISvcLocator* pSvcLocator)
-  : RichRecTupleAlgBase ( name , pSvcLocator )
+  : Rich::Rec::TupleAlgBase ( name , pSvcLocator )
   , nEvents(0)
 {
   declareProperty("DEBUG",DEBUG=false);
@@ -44,7 +46,7 @@ MDMRich1Algorithm::~MDMRich1Algorithm() {}
 //=============================================================================
 StatusCode MDMRich1Algorithm::initialize()
 {
-  StatusCode sc = RichRecTupleAlgBase::initialize(); // must be executed first
+  StatusCode sc = Rich::Rec::TupleAlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialize" << endmsg;
 
@@ -75,9 +77,9 @@ StatusCode MDMRich1Algorithm::execute()
     // --- loop over ingresses for this L1 board
     for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();iIn != (*iL1).second.end(); ++iIn ){
       // --- Loop over HPDs in this ingress
-      for ( Rich::DAQ::HPDMap::const_iterator iAllSmartIDs = (*iIn).second.hpdData().begin();
-            iAllSmartIDs!= (*iIn).second.hpdData().end(); ++iAllSmartIDs){
-        const LHCb::RichSmartID smartIDHPD = (*iAllSmartIDs).second.hpdID();
+      for ( HPDMap::const_iterator iAllSmartIDs = (*iIn).second.pdData().begin();
+            iAllSmartIDs!= (*iIn).second.pdData().end(); ++iAllSmartIDs){
+        const LHCb::RichSmartID smartIDHPD = (*iAllSmartIDs).second.pdID();
         Rich::DetectorType 	   RichNum = smartIDHPD.rich ();
         Rich::Side 	            PanNum = smartIDHPD.panel ();
         unsigned int                HPDCol = smartIDHPD.pdCol();
@@ -86,7 +88,7 @@ StatusCode MDMRich1Algorithm::execute()
 
         if(RichNum != Rich::Rich1) continue;
         
-        const Rich::DAQ::HPDInfo & hpdInfo = (*iAllSmartIDs).second;
+        const Rich::DAQ::PDInfo & hpdInfo = (*iAllSmartIDs).second;
         const Rich::DAQ::RichDAQHeaderV4::RichDAQHeaderPD & header = hpdInfo.header();
         plot2D(HPDCol,HPDRow,sPan+" HPD hit count",-0.5,6.5,-0.5,13.5,7,14);
         if(header.extendedFormat()){
@@ -113,5 +115,5 @@ StatusCode MDMRich1Algorithm::finalize()
   debug() << "==> Finalize" << endmsg;
 
   m_mdmHitMapManager->tidy();
-  return RichRecTupleAlgBase::finalize();  // must be called after all other actions
+  return Rich::Rec::TupleAlgBase::finalize();  // must be called after all other actions
 }

@@ -3,16 +3,16 @@
 #define MDMRICH1ALGORITHM_H 1
 
 // from Gaudi
-// #include "RichKernel/RichTupleAlgBase.h"
+#include "RichKernel/RichTupleAlgBase.h"
 #include "RichRecBase/RichRecTupleAlgBase.h"
 
 #include "GaudiAlg/GaudiTupleAlg.h"
 
-#include "RichKernel/IRichRawBufferToSmartIDsTool.h"
+#include "RichInterfaces/IRichRawBufferToSmartIDsTool.h"
 
 #include "MDMHitMapManager.h"
 
-class MDMRich1Algorithm : public RichRecTupleAlgBase {
+class MDMRich1Algorithm : public Rich::Rec::TupleAlgBase {
  public: 
   /// Standard constructor
   MDMRich1Algorithm( const std::string& name, ISvcLocator* pSvcLocator );

@@ -5,7 +5,8 @@
 #include "RichKernel/RichTupleToolBase.h"
 
 // Kernel
-#include "RichKernel/RichSmartIDSorter.h"
+//#include "RichKernel/RichSmartIDSorter.h"
+#include "RichUtils/RichSmartIDSorter.h"
 
 // interface
 #include "IHitMapManagerTool.h"
@@ -17,7 +18,7 @@ class TH2D;
 
 typedef boost::array<boost::array<boost::array<MDMHitMap,NHPDSPERCOLUMN>,NHPDCOLUMNS>,NHPDPANELS> Rich1HitMap;
 
-class MDMHitMapManager : public RichTupleToolBase, virtual public IHitMapManagerTool {
+class MDMHitMapManager : public Rich::TupleToolBase, virtual public IHitMapManagerTool {
 
  public:
   MDMHitMapManager( const std::string& type, const std::string& name, const IInterface* parent );
