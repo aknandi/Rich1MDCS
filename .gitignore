@@ -9,6 +9,7 @@ scripts/PatternCleaning.makesav
 python/xmlFiles/*
 python/batchjobs/LSF*/*
 python/output/*
+python/*.pyc
 scripts/output/*
 Make_Trends/output/*
 CreateDBLayer/*.db

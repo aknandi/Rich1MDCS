@@ -62,8 +62,8 @@ def fileMD5(file):
     return m.hexdigest()
 
 # MDMS - Run Number 171282 and 171986
-upAlign = "MDMS-RICH1-RunNumber171282and171986"
-dnAlign = "MDMS-RICH1-RunNumber171282and171986"
+upAlign = "Rich/Rich1MDMS/CreateDBLayer/MDMS-RICH1-RunNumber171282and171986"
+dnAlign = "Rich/Rich1MDMS/CreateDBLayer/MDMS-RICH1-RunNumber171282and171986"
 dbFileName = "MDCS-RICH1"
 
 # The following dates are extracted from spreadsheets here
